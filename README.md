@@ -1,6 +1,6 @@
 <# 
 Update-And-Backup-S3.ps1
-Author: Ayoub Tadlawi
+Author: Ayoub Rabihi
 
 Purpose:
 - Optionnel: installer les mises à jour Windows (best effort).
