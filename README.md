@@ -60,3 +60,4 @@
 ```powershell
 aws configure set default.s3.signature_version s3v4
 aws s3 sync "C:\Data\Shares" s3://my-bucket/ --endpoint-url https://s3.fr-par.scw.cloud --delete
+
