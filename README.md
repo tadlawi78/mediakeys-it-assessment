@@ -61,3 +61,49 @@
 aws configure set default.s3.signature_version s3v4
 aws s3 sync "C:\Data\Shares" s3://my-bucket/ --endpoint-url https://s3.fr-par.scw.cloud --delete
 
+---
+
+## 3) Sécurité et Réseau — Cloudflare DNS / Zero Trust
+
+**Objectif :** centraliser la sécurité DNS et gérer les accès distants via Cloudflare Zero Trust.
+
+- Enregistrer le domaine dans Cloudflare.  
+- Configurer DNS public (A, CNAME, MX, TXT).  
+- Activer DNSSEC et proxy “orange cloud” sur les services publics.  
+- Mettre en place les politiques de Zero Trust (IP ranges, device posture, MFA).  
+- Activer les tunnels Cloudflare pour accès RDP/SSH internes.  
+- Journaliser le trafic et exporter vers SIEM.
+
+---
+
+## 4) Support global & standardisation
+
+- Créer un catalogue matériel (poste, périphériques, licences).  
+- Standardiser les modèles par rôle (Sales, Dev, Infra).  
+- Documenter chaque procédure dans Confluence / Wiki interne.  
+- Mettre en place des alertes de supervision basiques (Pingdom, UptimeRobot, Grafana).
+
+---
+
+## 5) Script PowerShell d’automatisation
+
+Ce script réalise la sauvegarde et la synchronisation automatique d’un dossier local vers Scaleway S3.
+
+```powershell
+# Update-And-Backup-S3.ps1
+# Author: Ayoub Tadlawi
+# Date: October 2025
+
+$source = "C:\Data\Shares"
+$bucket = "s3://my-bucket/"
+$endpoint = "https://s3.fr-par.scw.cloud"
+$logFile = "C:\Logs\S3Backup_$(Get-Date -Format 'yyyyMMdd_HHmm').log"
+
+Write-Host "Starting S3 sync..."
+aws s3 sync $source $bucket --endpoint-url $endpoint --delete | Tee-Object -FilePath $logFile
+
+if ($LASTEXITCODE -eq 0) {
+    Write-Host "✅ Backup completed successfully!"
+} else {
+    Write-Host "❌ Backup failed. Check log: $logFile"
+}
